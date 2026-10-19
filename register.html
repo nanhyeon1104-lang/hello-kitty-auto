@@ -1,0 +1,170 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Đăng ký - Hello Kitty Auto</title>
+    <link href='https://unpkg.com/boxicons@2.1.4/css/boxicons.min.css' rel='stylesheet'>
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="login.css">
+    <style>
+        .custom-alert-overlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.6);
+            backdrop-filter: blur(5px);
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            z-index: 9999;
+            opacity: 0;
+            visibility: hidden;
+            transition: 0.3s ease;
+        }
+        .custom-alert-overlay.active {
+            opacity: 1;
+            visibility: visible;
+        }
+        .custom-alert-box {
+            background: #1a1a1a;
+            border: 2px solid rgba(255, 255, 255, 0.2);
+            padding: 30px;
+            border-radius: 15px;
+            width: 350px;
+            text-align: center;
+            box-shadow: 0 15px 35px rgba(0, 0, 0, 0.5);
+            transform: scale(0.8);
+            transition: 0.3s ease;
+        }
+        .custom-alert-overlay.active .custom-alert-box {
+            transform: scale(1);
+        }
+        .custom-alert-box h3 {
+            color: #fff;
+            margin-bottom: 15px;
+            font-size: 1.3em;
+        }
+        .custom-alert-box p {
+            color: #ccc;
+            font-size: 0.95em;
+            margin-bottom: 25px;
+        }
+        .custom-alert-box button {
+            width: 100%;
+            height: 40px;
+            border-radius: 20px;
+            background: #D5001C;
+            border: none;
+            color: #fff;
+            font-weight: 600;
+            cursor: pointer;
+            transition: 0.3s;
+        }
+        .custom-alert-box button:hover {
+            background: #ff0022;
+        }
+    </style>
+</head>
+<body>
+    <section>
+        <div class="form-box">
+            <div class="form-value">
+                <form id="registerForm">
+                    <h2>Đăng Ký</h2>
+                    
+                    <div class="inputbox">
+                        <ion-icon name="person-outline"></ion-icon>
+                        <input type="text" id="regUser" required>
+                        <label for="">Tên đăng nhập</label>
+                    </div>
+
+                    <div class="inputbox">
+                        <ion-icon name="lock-closed-outline"></ion-icon>
+                        <input type="password" id="regPass" required>
+                        <label for="">Mật khẩu</label>
+                    </div>
+
+                    <div class="inputbox">
+                        <ion-icon name="lock-closed-outline"></ion-icon>
+                        <input type="password" id="regConfirmPass" required>
+                        <label for="">Xác nhận lại mật khẩu</label>
+                    </div>
+
+                    <div class="inputbox">
+                        <ion-icon name="mail-outline"></ion-icon>
+                        <input type="email" id="regEmail" required>
+                        <label for="">Email</label>
+                    </div>
+
+                    <button type="submit" style="margin-top: 10px;">Đăng Ký</button>
+
+                    <div class="register">
+                        <p>Đã có tài khoản? <a href="login.html">Đăng nhập</a></p>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </section>
+
+    <div class="custom-alert-overlay" id="alertOverlay">
+        <div class="custom-alert-box">
+            <h3 id="alertTitle">Thông báo</h3>
+            <p id="alertMessage">Nội dung thông báo</p>
+            <button id="alertBtn">OK</button>
+        </div>
+    </div>
+
+    <script>
+        const registerForm = document.getElementById('registerForm');
+        const alertOverlay = document.getElementById('alertOverlay');
+        const alertTitle = document.getElementById('alertTitle');
+        const alertMessage = document.getElementById('alertMessage');
+        const alertBtn = document.getElementById('alertBtn');
+
+        let isSuccess = false;
+
+        registerForm.addEventListener('submit', function(e) {
+            e.preventDefault();
+            const user = document.getElementById('regUser').value.trim();
+            const pass = document.getElementById('regPass').value;
+            const confirmPass = document.getElementById('regConfirmPass').value;
+            const email = document.getElementById('regEmail').value.trim();
+
+            if (pass !== confirmPass) {
+                isSuccess = false;
+                alertTitle.textContent = "Lỗi đăng ký";
+                alertMessage.textContent = "Mật khẩu xác nhận không khớp. Vui lòng kiểm tra lại.";
+            } else {
+                let users = JSON.parse(sessionStorage.getItem('registeredUsers')) || [];
+                let existingUser = users.find(u => u.username === user);
+
+                if (existingUser || user === "admin123") {
+                    isSuccess = false;
+                    alertTitle.textContent = "Lỗi đăng ký";
+                    alertMessage.textContent = "Tên đăng nhập này đã tồn tại. Vui lòng chọn tên khác.";
+                } else {
+                    users.push({ username: user, password: pass, email: email });
+                    sessionStorage.setItem('registeredUsers', JSON.stringify(users));
+                    isSuccess = true;
+                    alertTitle.textContent = "Thành công";
+                    alertMessage.textContent = "Đăng ký tài khoản thành công! Bấm OK để chuyển về trang đăng nhập.";
+                }
+            }
+            alertOverlay.classList.add('active');
+        });
+
+        alertBtn.addEventListener('click', function() {
+            alertOverlay.classList.remove('active');
+            if (isSuccess) {
+                window.location.href = "login.html";
+            }
+        });
+    </script>
+
+    <script type="module" src="https://unpkg.com/ionicons@5.5.2/dist/ionicons/ionicons.esm.js"></script>
+    <script nomodule src="https://unpkg.com/ionicons@5.5.2/dist/ionicons/ionicons.js"></script>
+</body>
+</html>

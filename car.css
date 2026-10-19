@@ -1,0 +1,296 @@
+/* ==============================================================
+   TRẢ LẠI PHÔNG CHỮ SANG TRỌNG PORSCHE
+============================================================== */
+@import url('https://fonts.googleapis.com/css2?family=Montserrat:wght@400;500;600;700&display=swap');
+
+* { 
+    margin: 0; 
+    padding: 0; 
+    box-sizing: border-box; 
+    font-family: 'Montserrat', sans-serif !important; 
+}
+:root {
+    --bg-main: #F9FAFB; /* Nền xám cực kỳ nhạt và sang */
+    --bg-card: #FFFFFF;
+    --text-main: #111827;
+    --text-muted: #6B7280;
+    --border-color: #E5E7EB;
+    --accent-color: #D5001C;
+    --color-green: #10B981; --color-orange: #F59E0B; --color-red: #EF4444;
+    --header-height: 70px;
+}
+
+body { background-color: var(--bg-main); color: var(--text-main); overflow-x: hidden; }
+
+/* HEADER & SIDEBAR */
+.top-header { position: fixed; top: 0; width: 100%; height: var(--header-height); background: var(--bg-main); display: flex; justify-content: space-between; align-items: center; padding: 0 40px; z-index: 1000; }
+.menu-toggle, .right-group { display: flex; align-items: center; gap: 10px; cursor: pointer; color: var(--text-main); font-weight: 500; font-size: 14px;}
+.menu-toggle i, .right-account i { font-size: 24px; transition: 0.3s;}
+.menu-toggle:hover i { color: var(--accent-color); }
+.center-logo { position: absolute; left: 50%; transform: translateX(-50%); font-size: 18px; font-weight: 500; letter-spacing: 6px; }
+
+.sidebar { position: fixed; top: var(--header-height); left: -300px; height: 100vh; width: 280px; background: var(--bg-card); padding: 20px; z-index: 990; transition: 0.4s ease; box-shadow: 4px 0 15px rgba(0,0,0,0.03); border-right: 1px solid var(--border-color);}
+.sidebar.open { left: 0; }
+.nav-links li { list-style: none; margin-bottom: 5px; }
+.nav-links li a { display: flex; justify-content: space-between; align-items: center; padding: 15px 20px; color: var(--text-main); text-decoration: none; border-radius: 8px; font-weight: 500; transition: 0.2s; }
+.nav-links li a:hover, .nav-links li.active a { background: #F3F4F6; }
+
+.main-content { padding: calc(var(--header-height) + 10px) 40px 40px; }
+
+/* KPI CARDS (Bỏ viền, đổ bóng mềm) */
+.kpi-row { display: grid; grid-template-columns: repeat(4, 1fr); gap: 20px; margin-bottom: 40px; }
+.kpi-card { background: var(--bg-card); padding: 20px; border-radius: 12px; box-shadow: 0 4px 6px -1px rgba(0,0,0,0.05); }
+.kpi-card p { font-size: 12px; color: var(--text-muted); font-weight: 600; margin-bottom: 8px; text-transform: uppercase; }
+.kpi-card h3 { font-size: 22px; font-weight: 700; margin-bottom: 5px;}
+.kpi-card small { font-size: 13px; color: var(--text-muted); }
+.text-green { color: var(--color-green); } .text-orange { color: var(--color-orange); } .text-red { color: var(--color-red); }
+
+/* SEARCH & FILTER (Nằm giữa màn hình) */
+.search-filter-section { display: flex; flex-direction: column; align-items: center; margin-bottom: 30px; gap: 20px; }
+.search-box { display: flex; align-items: center; background: var(--bg-card); padding: 12px 25px; border-radius: 30px; width: 450px; border: 1px solid var(--border-color); box-shadow: 0 2px 5px rgba(0,0,0,0.02); }
+.search-box i { font-size: 20px; color: var(--text-muted); margin-right: 10px; }
+.search-box input { border: none; outline: none; width: 100%; font-size: 14px; background: transparent; }
+.filter-pills { display: flex; gap: 10px; }
+.pill { padding: 8px 20px; border-radius: 20px; border: 1px solid var(--border-color); background: transparent; color: var(--text-muted); font-size: 13px; cursor: pointer; transition: 0.2s; }
+.pill.active, .pill:hover { background: var(--text-main); color: #fff; border-color: var(--text-main); }
+
+/* KHU VỰC SPOTLIGHT (Hoàn toàn mới) */
+.spotlight-wrapper { position: relative; display: flex; align-items: center; justify-content: center; margin-bottom: 50px; user-select: none; }
+.nav-arrow { background: transparent; border: none; font-size: 40px; color: var(--text-muted); cursor: pointer; transition: 0.2s; z-index: 10; padding: 20px; }
+.nav-arrow:hover { color: var(--text-main); transform: scale(1.1); }
+
+.spotlight-content { width: 100%; max-width: 900px; display: flex; flex-direction: column; align-items: center; transition: opacity 0.4s ease; }
+
+/* Phần trên: Badges & Ảnh */
+.spot-top { position: relative; width: 100%; display: flex; flex-direction: column; align-items: center; }
+.badges-left { position: absolute; top: 0; left: 0; display: flex; flex-direction: column; gap: 8px; z-index: 5; }
+.badge-tag { padding: 6px 12px; border-radius: 4px; font-size: 11px; font-weight: 700; text-transform: uppercase; width: fit-content; }
+.bg-green { background: #E6F4EA; color: #137333; } .bg-gray { background: #F3F4F6; color: var(--text-muted); border: 1px solid var(--border-color); }
+
+.car-img { height: 260px; width: 100%; object-fit: contain; margin-bottom: 20px; pointer-events: none; -webkit-user-drag: none; filter: drop-shadow(0 20px 15px rgba(0,0,0,0.15)); }
+
+/* Phần dưới: Tên, Thông số, Giá, Nút */
+.spot-bottom { width: 100%; text-align: center; }
+.spot-bottom h1 { font-size: 36px; font-weight: 600; letter-spacing: 1px; color: var(--text-main); margin-bottom: 10px; }
+.car-specs { display: flex; justify-content: center; gap: 20px; color: var(--text-muted); font-size: 14px; margin-bottom: 30px; }
+
+/* Hộp Giá (Giống hệt ảnh) */
+.price-box { display: flex; justify-content: space-around; background: #F8F9FA; padding: 25px 20px; border-radius: 8px; margin-bottom: 30px; }
+.p-item { display: flex; flex-direction: column; align-items: center; gap: 8px; }
+.p-item small { font-size: 12px; color: var(--text-muted); }
+.p-item strong { font-size: 18px; font-weight: 700; color: var(--text-main); }
+.p-item.discount strong { color: var(--color-green); }
+.p-item.cost strong { color: var(--text-muted); }
+
+/* Dàn nút tác vụ */
+.action-buttons { display: flex; justify-content: center; gap: 15px; }
+.btn-act { padding: 12px 25px; border-radius: 6px; font-size: 14px; font-weight: 600; cursor: pointer; transition: 0.2s; display: flex; align-items: center; gap: 8px; border: 1px solid var(--border-color); background: var(--bg-card); color: var(--text-main); }
+.btn-act:hover { background: #F3F4F6; }
+.btn-act.black { background: var(--text-main); color: #fff; border-color: var(--text-main); }
+.btn-act.black:hover { background: var(--accent-color); border-color: var(--accent-color); }
+.btn-act.dashed { border-style: dashed; }
+
+/* BIỂU ĐỒ BÁO CÁO */
+.dashboard-charts { display: grid; grid-template-columns: 2fr 1fr; gap: 20px; margin-top: 40px; }
+.chart-card { background: var(--bg-card); border-radius: 12px; padding: 25px; box-shadow: 0 4px 6px -1px rgba(0,0,0,0.05); }
+.chart-card h3 { font-size: 16px; margin-bottom: 20px; display: flex; align-items: center; gap: 8px; font-weight: 600;}
+.canvas-container { position: relative; height: 250px; width: 100%; }
+/* ==============================================================
+   MÀU SẮC TRẠNG THÁI MỚI CHUẨN 100%
+============================================================== */
+.status-pending { background-color: #FF9800 !important; color: #FFF !important; }   /* Cam */
+.status-deposited { background-color: #4CAF50 !important; color: #FFF !important; } /* Xanh lá */
+.status-completed { background-color: #2196F3 !important; color: #FFF !important; } /* Xanh biển */
+.status-cancelled { background-color: #F44336 !important; color: #FFF !important; } /* Đỏ */
+
+/* Giúp chữ tên xe đậm và ngầu giống ảnh chụp */
+.spot-bottom h1 { font-weight: 700; letter-spacing: 0.5px; }
+/* ==============================================================
+   KHU VỰC TỔNG QUAN KHÁCH HÀNG (CRM CARD)
+============================================================== */
+.crm-card {
+    background: var(--bg-card);
+    border-radius: 12px;
+    padding: 25px;
+    box-shadow: 0 4px 6px -1px rgba(0,0,0,0.05);
+    margin-bottom: 50px; /* Tạo khoảng trống ở đáy trang web */
+}
+
+.crm-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 20px;
+}
+.crm-header h3 {
+    font-size: 16px;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    font-weight: 600;
+}
+.crm-header h3 i { color: var(--color-blue); font-size: 20px; } /* Icon màu xanh dương */
+
+.btn-view-all {
+    background: transparent;
+    border: none;
+    color: var(--text-muted);
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    gap: 5px;
+    font-size: 13px;
+    font-weight: 500;
+    transition: 0.3s;
+}
+.btn-view-all:hover { color: var(--text-main); }
+
+/* Bảng dữ liệu Khách hàng */
+.crm-table { width: 100%; border-collapse: collapse; text-align: left; }
+.crm-table th { padding: 12px; font-size: 11px; color: var(--text-muted); border-bottom: 2px solid var(--border-color); text-transform: uppercase;}
+.crm-table td { padding: 15px 12px; font-size: 14px; border-bottom: 1px solid var(--border-color); vertical-align: middle; }
+.crm-table tr:hover { background: #F9FAFB; }
+
+/* Tag trạng thái độ Nóng của khách */
+.lead-badge { padding: 4px 10px; border-radius: 4px; font-size: 11px; font-weight: 600; text-transform: uppercase;}
+.lead-badge.hot { background: #FCE8E6; color: #C5221F; }    /* Nóng = Đỏ */
+.lead-badge.warm { background: #FEF7E0; color: #B06000; }   /* Ấm = Cam */
+.lead-badge.cold { background: #E8F0FE; color: #1A73E8; }   /* Lạnh = Xanh dương */
+
+/* Nút Gọi điện */
+.btn-call { 
+    background: transparent; 
+    border: 1px solid var(--border-color); 
+    padding: 6px 12px; 
+    border-radius: 4px; 
+    cursor: pointer; 
+    display: flex; 
+    align-items: center; 
+    gap: 5px; 
+    font-weight: 500; 
+    transition: 0.2s;
+}
+.btn-call:hover { 
+    background: #10B981; /* Xanh lá cây gọi điện */
+    color: white; 
+    border-color: #10B981; 
+}
+/* ==============================================================
+   FIX LỖI MŨI TÊN BỊ LIỆT VÀ ẢNH BỊ TÀNG HÌNH
+============================================================== */
+
+/* 1. Ép mũi tên luôn luôn nổi lên trên cùng (z-index: 999) */
+.nav-arrow { 
+    position: absolute !important;
+    top: 50% !important;
+    transform: translateY(-50%) !important;
+    z-index: 999 !important; /* Đẩy nổi bần bật lên */
+    background: transparent;
+    border: none;
+    font-size: 45px;
+    color: var(--text-muted);
+    cursor: pointer;
+    transition: 0.2s;
+}
+.nav-arrow.left { left: 10px !important; }
+.nav-arrow.right { right: 10px !important; }
+.nav-arrow:hover { color: var(--accent-color); transform: translateY(-50%) scale(1.2) !important; }
+
+/* --- CHỈNH LẠI KHU VỰC CHIẾC XE (KHÔNG BỊ ĐÈ CHỮ) --- */
+.spotlight-wrapper { 
+    position: relative; /* Bắt buộc để giữ mũi tên */
+    display: flex; 
+    align-items: center; 
+    justify-content: center; 
+    margin-bottom: 30px; 
+    background: #fff;
+    padding: 30px;
+    border-radius: 12px;
+    box-shadow: 0 4px 15px rgba(0,0,0,0.03);
+}
+
+.spotlight-content { 
+    width: 100%; 
+    max-width: 900px; 
+    text-align: center;
+}
+
+.spot-top { 
+    position: relative; /* Quan trọng: Ép các Tag nằm trong khu vực ảnh */
+    width: 100%; 
+    min-height: 250px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    margin-bottom: 20px;
+}
+
+/* Đẩy huy hiệu lên góc trái trên cùng của ảnh */
+.badges-left { 
+    position: absolute; 
+    top: -10px; 
+    left: 0; 
+    display: flex; 
+    flex-direction: column; 
+    gap: 8px; 
+    z-index: 10;
+    text-align: left;
+}
+
+.car-img { 
+    height: 220px; 
+    width: auto;
+    max-width: 100%; 
+    object-fit: contain; 
+    filter: drop-shadow(0 20px 15px rgba(0,0,0,0.15)); 
+}
+
+/* HỒI SINH 2 MŨI TÊN (Z-index cao để luôn bấm được) */
+.nav-arrow { 
+    position: absolute;
+    top: 40%;
+    transform: translateY(-50%);
+    background: transparent; 
+    border: none; 
+    font-size: 50px; 
+    color: #999; 
+    cursor: pointer; 
+    z-index: 999; /* Đẩy lên trên cùng */
+    transition: 0.2s; 
+}
+.nav-arrow.left { left: 10px; }
+.nav-arrow.right { right: 10px; }
+.nav-arrow:hover { color: #111; transform: translateY(-50%) scale(1.2); }
+/* ==============================================================
+   KHÓA CHẶT VỊ TRÍ 2 MŨI TÊN LƯỚT XE Ở TRANG CHỦ
+============================================================== */
+.spotlight-wrapper {
+    position: relative !important; /* Tạo điểm tựa cho 2 mũi tên */
+}
+
+.nav-arrow {
+    position: absolute !important;
+    top: 45% !important; /* Đẩy mũi tên lên chính giữa thân xe */
+    transform: translateY(-50%) !important;
+    z-index: 100 !important; /* Nổi lên trên để luôn bấm được */
+    background: transparent !important;
+    border: none !important;
+    font-size: 50px !important;
+    color: #9CA3AF !important; /* Màu xám sang trọng */
+    cursor: pointer !important;
+    transition: all 0.2s ease !important;
+    padding: 10px !important;
+}
+
+.nav-arrow.left { 
+    left: 10px !important; /* Cố định mép trái */
+}
+
+.nav-arrow.right { 
+    right: 10px !important; /* Cố định mép phải */
+}
+
+.nav-arrow:hover {
+    color: #111827 !important; /* Di chuột vào thì đậm lên */
+    transform: translateY(-50%) scale(1.15) !important;
+}

@@ -1,0 +1,146 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Quản lý khách hàng | Hello Kitty Auto</title>
+  <link href="https://unpkg.com/boxicons@2.1.4/css/boxicons.min.css" rel="stylesheet">
+  <link rel="stylesheet" href="qlkh.css">
+  <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+</head>
+<body>
+  <!-- HEADER ĐỒNG BỘ TRANG CHỦ (ĐÃ XÓA MẶT TRĂNG) -->
+  <header class="top-header">
+    <button class="menu-toggle" id="btn" type="button" aria-label="Mở menu">
+      <i class="bx bx-menu"></i><span>Menu</span>
+    </button>
+    <a class="center-logo" href="car.html">HELLO KITTY AUTO</a>
+    <div class="right-group">
+      <a class="account-link" href="login.html" aria-label="Tài khoản"><i class="bx bx-user"></i></a>
+    </div>
+  </header>
+
+  <!-- SIDEBAR ĐỒNG BỘ TRANG CHỦ (ĐÃ XÓA TIN ĐĂNG) -->
+  <aside class="sidebar" aria-label="Menu chính">
+    <ul class="nav-links">
+            <li><a href="car.html"><span class="link_name">Tổng quan</span><i class='bx bx-chevron-right'></i></a></li>
+            <li><a href="danhsachoto.html"><span class="link_name">Danh sách ô tô</span><i class='bx bx-chevron-right'></i></a></li>
+            <li><a href="donhang.html"><span class="link_name">Đơn mua xe</span><i class='bx bx-chevron-right'></i></a></li>
+            <!-- Thẻ active nằm ở Khách hàng -->
+            <li class="active"><a href="qlkh.html"><span class="link_name">Danh sách khách hàng</span><i class='bx bx-chevron-right'></i></a></li>
+        </ul>
+    <div class="sidebar-note">
+      <i class="bx bx-car"></i>
+      <span>Hello Kitty Auto<br><small>Customer management</small></span>
+    </div>
+  </aside>
+
+  <!-- NỘI DUNG CHÍNH (GIỮ NGUYÊN 100% CẤU TRÚC LOGIC) -->
+  <main class="home-section">
+    <div class="page-heading">
+      <div>
+        <p class="eyebrow">HELLO KITTY AUTO / CRM</p>
+        <h1>Quản lý khách hàng</h1>
+        <p class="subtitle">Theo dõi khách hàng, nhu cầu mua xe và tiến độ tư vấn.</p>
+      </div>
+      <button class="primary-btn" id="add-customer-btn" type="button"><i class="bx bx-plus"></i> Thêm khách hàng</button>
+    </div>
+
+    <section class="stats-grid" aria-label="Thống kê khách hàng">
+      <article class="stat-card"><div class="stat-icon"><i class="bx bx-group"></i></div><div><span>Tổng khách hàng</span><strong id="total-count">0</strong><small>Tất cả hồ sơ</small></div></article>
+      <article class="stat-card"><div class="stat-icon"><i class="bx bx-user-plus"></i></div><div><span>Khách hàng mới</span><strong id="new-count">0</strong><small>Chưa liên hệ</small></div></article>
+      <article class="stat-card"><div class="stat-icon"><i class="bx bx-message-rounded-dots"></i></div><div><span>Đang tư vấn</span><strong id="consult-count">0</strong><small>Đang theo dõi</small></div></article>
+      <article class="stat-card"><div class="stat-icon"><i class="bx bx-check-circle"></i></div><div><span>Đã mua xe</span><strong id="bought-count">0</strong><small>Đã hoàn tất</small></div></article>
+    </section>
+
+    <section class="analytics-grid" aria-label="Phân tích dữ liệu khách hàng">
+      <article class="analytics-card"><div class="analytics-heading"><div><p class="eyebrow">CUSTOMER INSIGHTS</p><h2>Khách hàng theo trạng thái</h2><p>Phân bổ hồ sơ theo tiến độ tư vấn</p></div><span class="analytics-mark"><i class="bx bx-pie-chart-alt-2"></i></span></div><div class="chart-box"><canvas id="customer-status-chart" aria-label="Biểu đồ khách hàng theo trạng thái"></canvas></div></article>
+      <article class="analytics-card"><div class="analytics-heading"><div><p class="eyebrow">VEHICLE INTEREST</p><h2>Mẫu xe được quan tâm</h2><p>Dựa trên trường “Xe quan tâm” trong hồ sơ</p></div><span class="analytics-mark"><i class="bx bx-trending-up"></i></span></div><div class="chart-box chart-box-wide"><canvas id="customer-car-chart" aria-label="Biểu đồ xe được quan tâm"></canvas></div></article>
+    </section>
+
+    <section class="content-card">
+      <div class="toolbar">
+        <label class="search-box"><i class="bx bx-search"></i><input id="search-input" type="search" placeholder="Tìm tên, mã KH, số điện thoại, email..."></label>
+        <label class="filter-box"><span>Trạng thái</span>
+          <select id="status-filter">
+            <option value="all">Tất cả trạng thái</option>
+            <option value="Khách mới">Khách mới</option>
+            <option value="Đang tư vấn">Đang tư vấn</option>
+            <option value="Đã đặt cọc">Đã đặt cọc</option>
+            <option value="Đã mua xe">Đã mua xe</option>
+          </select>
+        </label>
+      </div>
+      <div class="table-heading"><div><h2>Danh sách khách hàng</h2><p id="result-summary">Danh sách hồ sơ khách hàng</p></div><span class="table-label"><i class="bx bx-shield-quarter"></i> Dữ liệu CRM đồng bộ</span></div>
+      <div class="table-wrap">
+        <table>
+          <thead><tr><th>Mã khách hàng</th><th>Khách hàng</th><th>Liên hệ</th><th>Xe quan tâm</th><th>Ngày tiếp nhận</th><th>Trạng thái</th><th>Thao tác</th></tr></thead>
+          <tbody id="customer-table-body"></tbody>
+        </table>
+      </div>
+      <div class="empty-state" id="empty-state" hidden><i class="bx bx-search-alt"></i><strong>Không tìm thấy khách hàng</strong><span>Thử thay đổi từ khóa hoặc bộ lọc.</span></div>
+      <div class="table-footer"><span id="footer-count">0 khách hàng</span><span>Dữ liệu được lưu trên trình duyệt này</span></div>
+    </section>
+    <footer class="page-footer">© 2026 Hello Kitty Auto <span>•</span> Quản lý khách hàng</footer>
+  </main>
+
+  <!-- TOÀN BỘ MODAL GIỮ NGUYÊN KHÔNG THIẾU 1 THẺ -->
+  <div class="modal-backdrop" id="customer-modal" hidden>
+    <section class="modal" role="dialog" aria-modal="true" aria-labelledby="modal-title">
+      <div class="modal-heading"><div><p class="eyebrow">CUSTOMER PROFILE</p><h2 id="modal-title">Thêm khách hàng</h2></div><button class="icon-btn" id="close-modal-btn" type="button" aria-label="Đóng"><i class="bx bx-x"></i></button></div>
+      <form id="customer-form">
+        <input type="hidden" id="customer-id">
+        <div class="form-grid">
+          <label>Họ và tên <span>*</span><input id="customer-name" required maxlength="100" placeholder="Nguyễn Văn An"></label>
+          <label>Số điện thoại <span>*</span><input id="customer-phone" required inputmode="tel" maxlength="20" placeholder="09xxxxxxxx"></label>
+          <label>Email<input id="customer-email" type="email" maxlength="120" placeholder="khachhang@example.com"></label>
+          <label>Xe quan tâm <span>*</span>
+            <select id="customer-car" required>
+              <option value="" disabled selected>-- Chọn xe trong cửa hàng --</option>
+              <option value="911 Carrera">911 Carrera</option>
+              <option value="Lamborghini Temerario">Lamborghini Temerario</option>
+              <option value="Polestar2 Performance">Polestar2 Performance</option>
+              <option value="Tesla Model 3 Performance">Tesla Model 3 Performance</option>
+            </select>
+          </label>
+          <label>Trạng thái
+            <select id="customer-status"><option>Khách mới</option><option>Đang tư vấn</option><option>Đã đặt cọc</option><option>Đã mua xe</option></select>
+          </label>
+          <label>Ngày tiếp nhận<input id="customer-date" type="date" required></label>
+          <label class="full-width">Ghi chú<textarea id="customer-notes" rows="3" maxlength="500" placeholder="Nhu cầu, lịch hẹn lái thử, nội dung cần lưu ý..."></textarea></label>
+        </div>
+        <p class="form-hint">Các trường có dấu * là bắt buộc. Hãy dùng dữ liệu mẫu khi thử nghiệm.</p>
+        <div class="modal-actions"><button class="secondary-btn" id="cancel-modal-btn" type="button">Hủy</button><button class="primary-btn" type="submit"><i class="bx bx-save"></i> Lưu khách hàng</button></div>
+      </form>
+    </section>
+  </div>
+  <div class="detail-backdrop" id="customer-detail-modal" hidden>
+    <section class="detail-modal" role="dialog" aria-modal="true" aria-labelledby="detail-name">
+      <div class="detail-cover">
+        <div class="detail-cover-mark"><i class="bx bx-user-check"></i></div>
+        <button class="detail-close" id="close-detail-btn" type="button" aria-label="Đóng"><i class="bx bx-x"></i></button>
+        <p class="detail-eyebrow">HELLO KITTY AUTO · CUSTOMER PROFILE</p>
+        <h2 id="detail-name">Thông tin khách hàng</h2>
+        <div class="detail-identity"><span id="detail-id">KH001</span><span id="detail-status" class="status status-new">Khách mới</span></div>
+      </div>
+      <div class="detail-content">
+        <div class="detail-section-title"><i class="bx bx-id-card"></i><span>Thông tin cá nhân</span></div>
+        <div class="detail-grid">
+          <div class="detail-field"><span><i class="bx bx-phone"></i> Số điện thoại</span><strong id="detail-phone">—</strong></div>
+          <div class="detail-field"><span><i class="bx bx-envelope"></i> Email</span><strong id="detail-email">—</strong></div>
+          <div class="detail-field"><span><i class="bx bx-calendar"></i> Ngày tiếp nhận</span><strong id="detail-date">—</strong></div>
+          <div class="detail-field"><span><i class="bx bx-car"></i> Xe quan tâm</span><strong id="detail-car">—</strong></div>
+        </div>
+        <div class="detail-section-title notes-title"><i class="bx bx-notepad"></i><span>Ghi chú tư vấn</span></div>
+        <div class="detail-notes" id="detail-notes">Chưa có ghi chú.</div>
+        <div class="detail-actions"><button class="secondary-btn" id="detail-close-bottom" type="button">Đóng</button><button class="primary-btn" id="detail-edit-btn" type="button"><i class="bx bx-edit-alt"></i> Chỉnh sửa hồ sơ</button></div>
+      </div>
+    </section>
+  </div>
+  <div class="toast" id="toast" role="status" aria-live="polite"></div>
+
+  <!-- NẠP DATABASE TRƯỚC RỒI ĐẾN JS -->
+  <script src="database.js"></script>
+  <script src="qlkh.js"></script>
+</body>
+</html>

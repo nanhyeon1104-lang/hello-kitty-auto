@@ -1,0 +1,152 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Chi Tiết Xe - HELLO KITTY AUTO</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link rel="stylesheet" href="chitietxe.css">
+</head>
+<body class="bg-[#F4F4F4] text-gray-900 font-sans antialiased min-h-screen flex flex-col justify-between">
+
+    <div class="flex-1">
+        <header class="header-watermark border-b border-gray-800 px-8 py-4 sticky top-0 z-50 shadow-md bg-black">
+            <div class="header-content flex items-center justify-between max-w-[1400px] mx-auto">
+                <div class="flex items-center space-x-4">
+                    <a href="danhsachoto.html" class="text-gray-300 hover:text-white transition flex items-center text-sm font-medium">
+                        <i class="fa-solid fa-arrow-left mr-2"></i> Quay lại danh sách xe
+                    </a>
+                    <h1 class="text-xl font-bold tracking-wider uppercase text-white">HELLO KITTY AUTO</h1>
+                </div>
+            </div>
+        </header>
+
+        <main class="max-w-[1200px] w-full mx-auto p-8 pt-12">
+            <div id="car-detail-container" class="bg-white rounded-3xl p-8 shadow-sm border border-gray-100">
+            </div>
+        </main>
+    </div>
+
+    <div id="editImagesModal" class="fixed inset-0 bg-black/50 hidden items-center justify-center z-50 p-4 overflow-y-auto">
+        <div class="bg-white rounded-2xl max-w-lg w-full p-6 shadow-2xl relative my-8">
+            <div class="flex justify-between items-center mb-4 border-b pb-3">
+                <h3 class="text-lg font-bold">Chỉnh Sửa Bộ Sưu Tập Ảnh Xe</h3>
+                <button onclick="closeEditModal()" class="text-gray-400 hover:text-black text-lg"><i class="fa-solid fa-xmark"></i></button>
+            </div>
+
+            <form id="editImagesForm" onsubmit="saveNewImages(event)" class="space-y-4 text-sm">
+                <p class="text-xs text-gray-500">Bạn có thể chọn thay thế từ 1 ảnh trở lên (các ô để trống sẽ giữ nguyên ảnh cũ):</p>
+                <div>
+                    <label class="block text-xs font-medium mb-1 text-gray-600">1. Ảnh chính:</label>
+                    <input type="file" id="editMainImg" accept="image/*" class="w-full bg-gray-50 border border-gray-300 rounded-lg p-1.5 text-xs">
+                </div>
+                <div>
+                    <label class="block text-xs font-medium mb-1 text-gray-600">2. Ảnh góc 45 độ / góc nghiêng:</label>
+                    <input type="file" id="editImg45" accept="image/*" class="w-full bg-gray-50 border border-gray-300 rounded-lg p-1.5 text-xs">
+                </div>
+                <div>
+                    <label class="block text-xs font-medium mb-1 text-gray-600">3. Ảnh nội thất cabin:</label>
+                    <input type="file" id="editImgCabin" accept="image/*" class="w-full bg-gray-50 border border-gray-300 rounded-lg p-1.5 text-xs">
+                </div>
+                <div>
+                    <label class="block text-xs font-medium mb-1 text-gray-600">4. Ảnh phía sau xe:</label>
+                    <input type="file" id="editImgRear" accept="image/*" class="w-full bg-gray-50 border border-gray-300 rounded-lg p-1.5 text-xs">
+                </div>
+
+                <div class="flex justify-end space-x-3 pt-4 border-t">
+                    <button type="button" onclick="closeEditModal()" class="px-4 py-2 bg-gray-200 rounded-lg hover:bg-gray-300 transition">Hủy</button>
+                    <button type="submit" class="px-5 py-2 bg-black text-white font-semibold rounded-lg hover:bg-gray-800 transition">Lưu ảnh thay đổi</button>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <div id="editInfoModal" class="fixed inset-0 bg-black/50 hidden items-center justify-center z-50 p-4 overflow-y-auto">
+        <div class="bg-white rounded-2xl max-w-xl w-full p-6 shadow-2xl relative my-8">
+            <div class="flex justify-between items-center mb-4 border-b pb-3">
+                <h3 class="text-lg font-bold">Chỉnh Sửa Thông Số Chi Tiết Xe</h3>
+                <button onclick="closeEditInfoModal()" class="text-gray-400 hover:text-black text-lg"><i class="fa-solid fa-xmark"></i></button>
+            </div>
+
+            <form id="editInfoForm" onsubmit="saveCarInfo(event)" class="space-y-4 text-sm">
+                <div>
+                    <label class="block font-medium mb-1">Tên xe:</label>
+                    <input type="text" id="infoCarName" required class="w-full bg-gray-50 border border-gray-300 rounded-lg p-2.5 focus:outline-none focus:ring-2 focus:ring-black">
+                </div>
+                <div class="grid grid-cols-3 gap-3">
+                    <div>
+                        <label class="block font-medium mb-1">Dòng xe:</label>
+                        <select id="infoCarCategory" class="w-full bg-gray-50 border border-gray-300 rounded-lg p-2.5 focus:outline-none focus:ring-2 focus:ring-black">
+                            <option value="electric">Điện</option>
+                            <option value="gasoline">Xăng</option>
+                            <option value="hybrid">Hybrid</option>
+                        </select>
+                    </div>
+                    <div>
+                        <label class="block font-medium mb-1">Năm sản xuất:</label>
+                        <input type="text" id="infoCarYear" required class="w-full bg-gray-50 border border-gray-300 rounded-lg p-2.5 focus:outline-none focus:ring-2 focus:ring-black">
+                    </div>
+                    <div>
+                        <label class="block font-medium mb-1">Tình trạng:</label>
+                        <input type="text" id="infoCarStatus" required class="w-full bg-gray-50 border border-gray-300 rounded-lg p-2.5 focus:outline-none focus:ring-2 focus:ring-black">
+                    </div>
+                </div>
+                <div class="grid grid-cols-2 gap-3">
+                    <div>
+                        <label class="block font-medium mb-1">Số chỗ ngồi:</label>
+                        <select id="infoCarSeats" class="w-full bg-gray-50 border border-gray-300 rounded-lg p-2.5 focus:outline-none focus:ring-2 focus:ring-black">
+                            <option value="2">2 chỗ</option>
+                            <option value="4">4 chỗ</option>
+                            <option value="5">5 chỗ</option>
+                            <option value="7">7 chỗ</option>
+                        </select>
+                    </div>
+                    <div>
+                        <label class="block font-medium mb-1">Hệ dẫn động:</label>
+                        <select id="infoCarDrive" class="w-full bg-gray-50 border border-gray-300 rounded-lg p-2.5 focus:outline-none focus:ring-2 focus:ring-black">
+                            <option value="rear">Cầu sau (RWD)</option>
+                            <option value="front">Cầu trước (FWD)</option>
+                        </select>
+                    </div>
+                </div>
+                <div class="grid grid-cols-2 gap-3">
+                    <div>
+                        <label class="block font-medium mb-1">Giá sale:</label>
+                        <input type="text" id="infoCarPrice" required class="w-full bg-gray-50 border border-gray-300 rounded-lg p-2.5 focus:outline-none focus:ring-2 focus:ring-black">
+                    </div>
+                    <div>
+                        <label class="block font-medium mb-1">Giá nhập:</label>
+                        <input type="text" id="infoCarImportPrice" required class="w-full bg-gray-50 border border-gray-300 rounded-lg p-2.5 focus:outline-none focus:ring-2 focus:ring-black">
+                    </div>
+                </div>
+                <div class="grid grid-cols-3 gap-3">
+                    <div>
+                        <label class="block font-medium mb-1">Quãng đường tối đa:</label>
+                        <input type="text" id="infoCarRange" required class="w-full bg-gray-50 border border-gray-300 rounded-lg p-2.5 focus:outline-none focus:ring-2 focus:ring-black">
+                    </div>
+                    <div>
+                        <label class="block font-medium mb-1">Tăng tốc (0-100 km/h):</label>
+                        <input type="text" id="infoCarAccel" required class="w-full bg-gray-50 border border-gray-300 rounded-lg p-2.5 focus:outline-none focus:ring-2 focus:ring-black">
+                    </div>
+                    <div>
+                        <label class="block font-medium mb-1">Tốc độ tối đa:</label>
+                        <input type="text" id="infoCarSpeed" required class="w-full bg-gray-50 border border-gray-300 rounded-lg p-2.5 focus:outline-none focus:ring-2 focus:ring-black">
+                    </div>
+                </div>
+                <div>
+                    <label class="block font-medium mb-1">Tiêu thụ nhiên liệu:</label>
+                    <input type="text" id="infoCarFuel" required class="w-full bg-gray-50 border border-gray-300 rounded-lg p-2.5 focus:outline-none focus:ring-2 focus:ring-black">
+                </div>
+
+                <div class="flex justify-end space-x-3 pt-4 border-t">
+                    <button type="button" onclick="closeEditInfoModal()" class="px-4 py-2 bg-gray-200 rounded-lg hover:bg-gray-300 transition">Hủy</button>
+                    <button type="submit" class="px-5 py-2 bg-black text-white font-semibold rounded-lg hover:bg-gray-800 transition">Lưu thông tin</button>
+                </div>
+            </form>
+        </div>
+    </div>
+    <script src="database.js"></script>
+    <script src="chitietxe.js"></script>
+</body>
+</html>

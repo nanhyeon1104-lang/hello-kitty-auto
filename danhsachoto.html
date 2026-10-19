@@ -1,0 +1,302 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Danh Sách Ô Tô - HELLO KITTY AUTO</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+     <link href='https://unpkg.com/boxicons@2.1.4/css/boxicons.min.css' rel='stylesheet'>
+    <link rel="stylesheet" href="car.css"> 
+    <link rel="stylesheet" href="danhsachoto.css">
+</head>
+<body class="bg-[#F4F4F4] text-gray-900 font-sans antialiased min-h-screen flex flex-col justify-between">
+
+    <div class="flex-1">
+        <!-- =========================================
+         1. THANH HEADER (ĐỒNG BỘ)
+    ========================================= -->
+    <header class="top-header">
+        <div class="menu-toggle" id="btn"><i class='bx bx-menu'></i><span>MENU</span></div>
+        <div class="center-logo">HELLO KITTY AUTO</div>
+        <div class="right-group">
+            <div class="search-box-header" style="display: flex; align-items: center; border: 1px solid #ccc; border-radius: 6px; padding: 0 10px; height: 38px; width: 280px; background: #fff; margin-right: 15px;">
+                <i class='bx bx-search' style="font-size: 18px; color: #888; margin-right: 8px;"></i>
+                <input type="text" id="searchInput" oninput="searchCarByName()" placeholder="Tìm kiếm tên xe..." style="border: none; outline: none; width: 100%; font-size: 13px; background: transparent;">
+            </div>
+            <div class="right-account"><a href="#"><i class='bx bx-user'></i></a></div>
+        </div>
+    </header>
+
+    <!-- =========================================
+         2. SIDEBAR (MENU TRÁI ĐỒNG BỘ)
+    ========================================= -->
+    <aside class="sidebar">
+        <ul class="nav-links">
+            <li><a href="car.html"><span class="link_name">Tổng quan</span><i class='bx bx-chevron-right'></i></a></li>
+            <li class="active"><a href="danhsachoto.html"><span class="link_name">Danh sách ô tô</span><i class='bx bx-chevron-right'></i></a></li>
+            <li><a href="donhang.html"><span class="link_name">Đơn mua xe</span><i class='bx bx-chevron-right'></i></a></li>
+            <li><a href="qlkh.html"><span class="link_name">Danh sách khách hàng</span><i class='bx bx-chevron-right'></i></a></li>
+        </ul>
+    </aside>
+
+        <!-- DÒNG MỚI ĐÃ ĐẨY pt-28 XUỐNG DƯỚI HEADER -->
+<main class="max-w-[1400px] w-full mx-auto p-8 pt-28 flex flex-col md:flex-row gap-10">
+            <aside class="w-full md:w-64 flex-shrink-0 space-y-8">
+                <div class="bg-white p-4 rounded-2xl shadow-sm border border-gray-100">
+                    <h3 onclick="toggleFilterSection('category-filter-content', 'category-icon')" class="text-lg font-bold mb-3 flex items-center justify-between cursor-pointer select-none">
+                        <span>Dòng Xe Chính</span>
+                        <i id="category-icon" class="bx bx-chevron-up text-lg text-gray-500 transition-transform duration-300"></i>
+                    </h3>
+                    <div id="category-filter-content" class="space-y-2 text-sm overflow-hidden transition-all duration-300">
+                        <label onclick="filterCarType('all')" class="flex items-center space-x-3 cursor-pointer p-2 rounded hover:bg-gray-100 transition font-medium">
+                            <input type="radio" name="carType" checked class="accent-black w-4 h-4">
+                            <span>Tất cả dòng xe</span>
+                        </label>
+                        <label onclick="filterCarType('electric')" class="flex items-center space-x-3 cursor-pointer p-2 rounded hover:bg-gray-100 transition">
+                            <input type="radio" name="carType" class="accent-black w-4 h-4">
+                            <span>Xe Điện - Electric</span>
+                        </label>
+                        <label onclick="filterCarType('gasoline')" class="flex items-center space-x-3 cursor-pointer p-2 rounded hover:bg-gray-100 transition">
+                            <input type="radio" name="carType" class="accent-black w-4 h-4">
+                            <span>Xe Xăng - Gasoline</span>
+                        </label>
+                        <label onclick="filterCarType('hybrid')" class="flex items-center space-x-3 cursor-pointer p-2 rounded hover:bg-gray-100 transition">
+                            <input type="radio" name="carType" class="accent-black w-4 h-4">
+                            <span>Xe Hybrid</span>
+                        </label>
+                    </div>
+                </div>
+
+                <div class="bg-white p-4 rounded-2xl shadow-sm border border-gray-100">
+                    <h3 onclick="toggleFilterSection('seat-filter-content', 'seat-icon')" class="text-lg font-bold mb-3 flex items-center justify-between cursor-pointer select-none">
+                        <span>Số Chỗ Ngồi</span>
+                        <i id="seat-icon" class="bx bx-chevron-up text-lg text-gray-500 transition-transform duration-300"></i>
+                    </h3>
+                    <div id="seat-filter-content" class="space-y-2 text-sm overflow-hidden transition-all duration-300">
+                        <label class="flex items-center space-x-3 cursor-pointer p-1.5 rounded hover:bg-gray-100 transition">
+                            <input type="checkbox" name="seatFilter" value="2" onchange="applyFilters()" class="accent-black w-4 h-4 rounded">
+                            <span>2 chỗ</span>
+                        </label>
+                        <label class="flex items-center space-x-3 cursor-pointer p-1.5 rounded hover:bg-gray-100 transition">
+                            <input type="checkbox" name="seatFilter" value="4" onchange="applyFilters()" class="accent-black w-4 h-4 rounded">
+                            <span>4 chỗ</span>
+                        </label>
+                        <label class="flex items-center space-x-3 cursor-pointer p-1.5 rounded hover:bg-gray-100 transition">
+                            <input type="checkbox" name="seatFilter" value="5" onchange="applyFilters()" class="accent-black w-4 h-4 rounded">
+                            <span>5 chỗ</span>
+                        </label>
+                        <label class="flex items-center space-x-3 cursor-pointer p-1.5 rounded hover:bg-gray-100 transition">
+                            <input type="checkbox" name="seatFilter" value="7" onchange="applyFilters()" class="accent-black w-4 h-4 rounded">
+                            <span>7 chỗ</span>
+                        </label>
+                    </div>
+                </div>
+
+                <div class="bg-white p-4 rounded-2xl shadow-sm border border-gray-100">
+                    <h3 onclick="toggleFilterSection('drive-filter-content', 'drive-icon')" class="text-lg font-bold mb-3 flex items-center justify-between cursor-pointer select-none">
+                        <span>Hệ Dẫn Động</span>
+                        <i id="drive-icon" class="bx bx-chevron-up text-lg text-gray-500 transition-transform duration-300"></i>
+                    </h3>
+                    <div id="drive-filter-content" class="space-y-2 text-sm overflow-hidden transition-all duration-300">
+                        <label class="flex items-center space-x-3 cursor-pointer p-1.5 rounded hover:bg-gray-100 transition">
+                            <input type="checkbox" name="driveFilter" value="rear" onchange="applyFilters()" class="accent-black w-4 h-4 rounded">
+                            <span>Dẫn động cầu sau</span>
+                        </label>
+                        <label class="flex items-center space-x-3 cursor-pointer p-1.5 rounded hover:bg-gray-100 transition">
+                            <input type="checkbox" name="driveFilter" value="front" onchange="applyFilters()" class="accent-black w-4 h-4 rounded">
+                            <span>Dẫn động cầu trước</span>
+                        </label>
+                    </div>
+                </div>
+
+                <div class="bg-white p-4 rounded-2xl shadow-sm border border-gray-100">
+                    <h3 onclick="toggleFilterSection('stock-status-content', 'stock-status-icon')" class="text-lg font-bold mb-3 flex items-center justify-between cursor-pointer select-none">
+                        <span>Tình trạng kho</span>
+                        <i id="stock-status-icon" class="bx bx-chevron-up text-lg text-gray-500 transition-transform duration-300"></i>
+                    </h3>
+                    <div id="stock-status-content" class="space-y-2 text-sm overflow-hidden transition-all duration-300">
+                        <label class="flex items-center space-x-3 cursor-pointer p-1.5 rounded hover:bg-gray-100 transition">
+                            <input type="checkbox" name="stockStatusFilter" value="un-sold" onchange="applyFilters()" class="accent-black w-4 h-4 rounded">
+                            <span id="un-sold-label">Xe chưa bán (0)</span>
+                        </label>
+                        <label class="flex items-center space-x-3 cursor-pointer p-1.5 rounded hover:bg-gray-100 transition">
+                            <input type="checkbox" name="stockStatusFilter" value="sold" onchange="applyFilters()" class="accent-black w-4 h-4 rounded">
+                            <span id="sold-label">Xe đã bán (0)</span>
+                        </label>
+                    </div>
+                </div>
+            </aside>
+
+            <section class="flex-1 flex flex-col justify-between">
+                <div>
+                    <h2 id="section-title" class="text-2xl font-normal mb-8">Danh Sách Các Dòng Xe</h2>
+                    <div class="grid grid-cols-1 lg:grid-cols-2 gap-12" id="car-variants-grid">
+                    </div>
+                </div>
+
+                <div id="pagination-container" class="flex items-center justify-center space-x-2 mt-16 pb-8"></div>
+            </section>
+        </main>
+    </div>
+
+    <button onclick="openAddModal()" class="fixed bottom-12 right-8 w-14 h-14 bg-black text-white rounded-full shadow-2xl flex items-center justify-center text-2xl hover:bg-gray-800 transition transform hover:scale-110 z-50 border-2 border-black" title="Thêm xe mới">
+        <i class="fa-solid fa-plus"></i>
+    </button>
+
+    <div id="addCarModal" class="fixed inset-0 bg-black/50 hidden items-center justify-center z-50 p-4 overflow-y-auto">
+        <div class="bg-white rounded-2xl max-w-xl w-full p-6 shadow-2xl relative my-8">
+            <div class="flex justify-between items-center mb-4 border-b pb-3">
+                <h3 class="text-lg font-bold">Thêm Xe Ô Tô Mới & Trạng Thái Bán</h3>
+                <button onclick="closeAddModal()" class="text-gray-400 hover:text-black text-lg"><i class="fa-solid fa-xmark"></i></button>
+            </div>
+
+            <form id="addCarForm" onsubmit="addNewCar(event)" class="space-y-4 text-sm">
+                <div>
+                    <label class="block font-medium mb-1">Tên xe:</label>
+                    <input type="text" id="newCarName" required placeholder="Ví dụ: Audi e-tron GT" class="w-full bg-gray-50 border border-gray-300 rounded-lg p-2.5 focus:outline-none focus:ring-2 focus:ring-black">
+                </div>
+                <div class="grid grid-cols-3 gap-3">
+                    <div>
+                        <label class="block font-medium mb-1">Dòng xe:</label>
+                        <select id="newCarCategory" class="w-full bg-gray-50 border border-gray-300 rounded-lg p-2.5 focus:outline-none focus:ring-2 focus:ring-black">
+                            <option value="electric">Điện</option>
+                            <option value="gasoline">Xăng</option>
+                            <option value="hybrid">Hybrid</option>
+                        </select>
+                    </div>
+                    <div>
+                        <label class="block font-medium mb-1">Năm sản xuất:</label>
+                        <input type="text" id="newCarYear" required placeholder="VD: 2024" class="w-full bg-gray-50 border border-gray-300 rounded-lg p-2.5 focus:outline-none focus:ring-2 focus:ring-black">
+                    </div>
+                    <div>
+                        <label class="block font-medium mb-1">Tình trạng:</label>
+                        <input type="text" id="newCarStatus" required placeholder="VD: Mới 100%" class="w-full bg-gray-50 border border-gray-300 rounded-lg p-2.5 focus:outline-none focus:ring-2 focus:ring-black">
+                    </div>
+                </div>
+                <div class="grid grid-cols-2 gap-3">
+                    <div>
+                        <label class="block font-medium mb-1">Số chỗ ngồi:</label>
+                        <select id="newCarSeats" class="w-full bg-gray-50 border border-gray-300 rounded-lg p-2.5 focus:outline-none focus:ring-2 focus:ring-black">
+                            <option value="2">2 chỗ</option>
+                            <option value="4">4 chỗ</option>
+                            <option value="5" selected>5 chỗ</option>
+                            <option value="7">7 chỗ</option>
+                        </select>
+                    </div>
+                    <div>
+                        <label class="block font-medium mb-1">Hệ dẫn động:</label>
+                        <select id="newCarDrive" class="w-full bg-gray-50 border border-gray-300 rounded-lg p-2.5 focus:outline-none focus:ring-2 focus:ring-black">
+                            <option value="rear">Cầu sau (RWD)</option>
+                            <option value="front">Cầu trước (FWD)</option>
+                        </select>
+                    </div>
+                </div>
+                <div class="grid grid-cols-3 gap-3">
+                    <div>
+                        <label class="block font-medium mb-1">Giá sale:</label>
+                        <input type="text" id="newCarPrice" required oninput="formatInputPrice(this)" placeholder="850,000,000" class="w-full bg-gray-50 border border-gray-300 rounded-lg p-2.5 focus:outline-none focus:ring-2 focus:ring-black">
+                    </div>
+                    <div>
+                        <label class="block font-medium mb-1">Giá đã bán thực tế:</label>
+                        <input type="text" id="newCarSoldPrice" oninput="formatInputPrice(this)" placeholder="820,000,000" class="w-full bg-gray-50 border border-gray-300 rounded-lg p-2.5 focus:outline-none focus:ring-2 focus:ring-black">
+                    </div>
+                    <div>
+                        <label class="block font-medium mb-1">Giá nhập:</label>
+                        <input type="text" id="newCarImportPrice" required oninput="formatInputPrice(this)" placeholder="750,000,000" class="w-full bg-gray-50 border border-gray-300 rounded-lg p-2.5 focus:outline-none focus:ring-2 focus:ring-black">
+                    </div>
+                </div>
+                <div class="grid grid-cols-3 gap-3">
+                    <div>
+                        <label class="block font-medium mb-1">Quãng đường tối đa:</label>
+                        <input type="text" id="newCarRange" required placeholder="VD: 500 km" class="w-full bg-gray-50 border border-gray-300 rounded-lg p-2.5 focus:outline-none focus:ring-2 focus:ring-black">
+                    </div>
+                    <div>
+                        <label class="block font-medium mb-1">Tiêu thụ nhiên liệu:</label>
+                        <input type="text" id="newCarFuel" required placeholder="VD: 8.5L/100km" class="w-full bg-gray-50 border border-gray-300 rounded-lg p-2.5 focus:outline-none focus:ring-2 focus:ring-black">
+                    </div>
+                    <div>
+                        <label class="block font-medium mb-1">Tốc độ tối đa:</label>
+                        <input type="text" id="newCarSpeed" required placeholder="VD: 200 km/h" class="w-full bg-gray-50 border border-gray-300 rounded-lg p-2.5 focus:outline-none focus:ring-2 focus:ring-black">
+                    </div>
+                </div>
+                <div class="flex items-center space-x-2 pt-2">
+                    <input type="checkbox" id="newCarIsSold" class="w-5 h-5 accent-red-600 rounded">
+                    <label for="newCarIsSold" class="font-bold text-red-600 text-sm cursor-pointer">Đã bán xe này</label>
+                </div>
+
+                <div class="border-t pt-3 space-y-3">
+                    <p class="font-semibold text-gray-700">Bộ Sưu Tập Hình Ảnh Chi Tiết:</p>
+                    <div>
+                        <label class="block text-xs font-medium mb-1 text-gray-600">1. Ảnh chính:</label>
+                        <input type="file" id="newCarMainImg" accept="image/*" required class="w-full bg-gray-50 border border-gray-300 rounded-lg p-1.5 text-xs">
+                    </div>
+                    <div>
+                        <label class="block text-xs font-medium mb-1 text-gray-600">2. Ảnh góc 45 độ / góc nghiêng:</label>
+                        <input type="file" id="newCarImg45" accept="image/*" required class="w-full bg-gray-50 border border-gray-300 rounded-lg p-1.5 text-xs">
+                    </div>
+                    <div>
+                        <label class="block text-xs font-medium mb-1 text-gray-600">3. Ảnh nội thất cabin:</label>
+                        <input type="file" id="newCarImgCabin" accept="image/*" required class="w-full bg-gray-50 border border-gray-300 rounded-lg p-1.5 text-xs">
+                    </div>
+                    <div>
+                        <label class="block text-xs font-medium mb-1 text-gray-600">4. Ảnh phía sau xe:</label>
+                        <input type="file" id="newCarImgRear" accept="image/*" required class="w-full bg-gray-50 border border-gray-300 rounded-lg p-1.5 text-xs">
+                    </div>
+                </div>
+
+                <div class="flex justify-end space-x-3 pt-4 border-t">
+                    <button type="button" onclick="closeAddModal()" class="px-4 py-2 bg-gray-200 rounded-lg hover:bg-gray-300 transition">Hủy</button>
+                    <button type="submit" class="px-5 py-2 bg-black text-white font-semibold rounded-lg hover:bg-gray-800 transition">Cập nhật lên danh sách</button>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <div id="editSoldModal" class="fixed inset-0 bg-black/50 hidden items-center justify-center z-50 p-4">
+        <div class="bg-white rounded-2xl max-w-md w-full p-6 shadow-2xl relative">
+            <div class="flex justify-between items-center mb-4 border-b pb-3">
+                <h3 class="text-lg font-bold">Cập Nhật Trạng Thái Bán Xe</h3>
+                <button onclick="closeEditSoldModal()" class="text-gray-400 hover:text-black text-lg"><i class="fa-solid fa-xmark"></i></button>
+            </div>
+
+            <form id="editSoldForm" onsubmit="saveCarSoldStatus(event)" class="space-y-4 text-sm">
+                <input type="hidden" id="editCarIndex">
+                <div>
+                    <label class="block font-medium mb-1">Tên xe:</label>
+                    <input type="text" id="editCarNameDisplay" disabled class="w-full bg-gray-100 border border-gray-300 rounded-lg p-2.5 text-gray-600">
+                </div>
+                <div>
+                    <label class="block font-medium mb-1">Giá đã bán thực tế:</label>
+                    <input type="text" id="editCarSoldPriceInput" oninput="formatInputPrice(this)" placeholder="Ví dụ: 820,000,000" class="w-full bg-gray-50 border border-gray-300 rounded-lg p-2.5 focus:outline-none focus:ring-2 focus:ring-black">
+                </div>
+                <div class="flex items-center space-x-3 pt-2">
+                    <input type="checkbox" id="editCarIsSoldCheckbox" class="w-5 h-5 accent-red-600 rounded">
+                    <label for="editCarIsSoldCheckbox" class="font-bold text-red-600 text-sm cursor-pointer">Đã bán xe này</label>
+                </div>
+
+                <div class="flex justify-end space-x-3 pt-4 border-t">
+                    <button type="button" onclick="closeEditSoldModal()" class="px-4 py-2 bg-gray-200 rounded-lg hover:bg-gray-300 transition">Hủy</button>
+                    <button type="submit" class="px-5 py-2 bg-black text-white font-semibold rounded-lg hover:bg-gray-800 transition">Lưu thay đổi</button>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <script>
+        function toggleFilterSection(contentId, iconId) {
+            const content = document.getElementById(contentId);
+            const icon = document.getElementById(iconId);
+            if (content.style.display === "none") {
+                content.style.display = "block";
+                icon.style.transform = "rotate(0deg)";
+            } else {
+                content.style.display = "none";
+                icon.style.transform = "rotate(180deg)";
+            }
+        }
+    </script>
+    <script src="database.js"></script>
+    <script src="danhsachoto.js"></script>
+</body>
+</html>

@@ -1,0 +1,229 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Hello Kitty Auto - Executive</title>
+    <link href='https://unpkg.com/boxicons@2.1.4/css/boxicons.min.css' rel='stylesheet'>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <link rel="stylesheet" href="car.css">
+    <style>
+        .custom-alert-overlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.6);
+            backdrop-filter: blur(5px);
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            z-index: 9999;
+            opacity: 0;
+            visibility: hidden;
+            transition: 0.3s ease;
+        }
+        .custom-alert-overlay.active {
+            opacity: 1;
+            visibility: visible;
+        }
+        .custom-alert-box {
+            position: relative;
+            background: #1a1a1a;
+            border: 2px solid rgba(255, 255, 255, 0.2);
+            padding: 30px;
+            border-radius: 15px;
+            width: 350px;
+            text-align: center;
+            box-shadow: 0 15px 35px rgba(0, 0, 0, 0.5);
+            transform: scale(0.8);
+            transition: 0.3s ease;
+        }
+        .custom-alert-overlay.active .custom-alert-box {
+            transform: scale(1);
+        }
+        .custom-alert-box .close-btn {
+            position: absolute;
+            top: 10px;
+            right: 15px;
+            background: transparent;
+            border: none;
+            color: #fff;
+            font-size: 1.5em;
+            cursor: pointer;
+            width: auto;
+            height: auto;
+            transition: 0.3s;
+        }
+        .custom-alert-box .close-btn:hover {
+            color: #D5001C;
+            background: transparent;
+        }
+        .custom-alert-box h3 {
+            color: #fff;
+            margin-bottom: 15px;
+            font-size: 1.3em;
+        }
+        .custom-alert-box p {
+            color: #ccc;
+            font-size: 0.95em;
+            margin-bottom: 25px;
+        }
+        .custom-alert-box button#authAlertBtn {
+            width: 100%;
+            height: 40px;
+            border-radius: 20px;
+            background: #D5001C;
+            border: none;
+            color: #fff;
+            font-weight: 600;
+            cursor: pointer;
+            transition: 0.3s;
+        }
+        .custom-alert-box button#authAlertBtn:hover {
+            background: #ff0022;
+        }
+    </style>
+</head>
+<body>
+
+    <header class="top-header">
+        <div class="menu-toggle" id="btn"><i class='bx bx-menu'></i><span>MENU</span></div>
+        <div class="center-logo">HELLO KITTY AUTO</div>
+        <div class="right-group"><div class="right-account"><a href="login.html"><i class='bx bx-user'></i></a></div></div>
+    </header>
+
+    <aside class="sidebar">
+        <ul class="nav-links">
+            <li class="active"><a href="#"><span class="link_name">Tổng quan</span><i class='bx bx-chevron-right'></i></a></li>
+            <li><a href="danhsachoto.html"><span class="link_name">Danh sách ô tô</span><i class='bx bx-chevron-right'></i></a></li>
+            <li><a href="donhang.html"><span class="link_name">Đơn mua xe</span><i class='bx bx-chevron-right'></i></a></li>
+            <li><a href="qlkh.html"><span class="link_name">Danh sách khách hàng</span><i class='bx bx-chevron-right'></i></a></li>
+        </ul>
+    </aside>
+
+    <main class="main-content">
+        
+        <div class="kpi-row">
+            <div class="kpi-card"><p>TỔNG NIÊM YẾT</p><h3>38,82 Tỷ ₫</h3><small>Vốn nhập: 32,65 Tỷ</small></div>
+            <div class="kpi-card"><p>LỢI NHUẬN GỘP</p><h3 class="text-green">+ 5,87 Tỷ ₫</h3><small>Dự kiến sau khuyến mãi</small></div>
+            <div class="kpi-card"><p>GIAO HÔM NAY</p><h3 class="text-orange">01 Xe</h3><small>Lamborghini Temerario</small></div>
+            <div class="kpi-card"><p>TỒN KHO > 60 NGÀY</p><h3 class="text-red">01 Xe</h3><small>Polestar 2 (65 ngày)</small></div>
+        </div>
+
+        <div class="search-filter-section">
+            <div class="search-box">
+                <i class='bx bx-search'></i>
+                <input type="text" id="searchInput" placeholder="Tìm tên xe...">
+            </div>
+           <div class="filter-pills">
+                <button class="pill active" data-filter="all">Tất cả</button>
+                <button class="pill" data-filter="pending">Chờ xác nhận</button>
+                <button class="pill" data-filter="deposited">Đã cọc</button>
+                <button class="pill" data-filter="completed">Đã giao xe</button>
+                <button class="pill" data-filter="cancelled">Đã hủy</button>
+            </div>
+        </div>
+
+        <div class="spotlight-wrapper" id="swipeArea">
+            <button id="spotPrev" class="nav-arrow left"><i class='bx bx-chevron-left'></i></button>
+            <div class="spotlight-content" id="carSpotlight">
+            </div>
+            <button id="spotNext" class="nav-arrow right"><i class='bx bx-chevron-right'></i></button>
+        </div>
+
+        <div class="dashboard-charts">
+            <div class="chart-card">
+                <h3><i class='bx bx-bar-chart-alt-2'></i> Doanh thu dự kiến 6 tháng</h3>
+                <div class="canvas-container"><canvas id="revenueChart"></canvas></div>
+            </div>
+            <div class="chart-card">
+                <h3><i class='bx bx-pie-chart-alt-2'></i> Trạng thái Kho xe</h3>
+                <div class="canvas-container"><canvas id="inventoryChart"></canvas></div>
+            </div>
+            
+            <div class="crm-card">
+                <div class="crm-header">
+                    <h3><i class='bx bx-user-pin'></i> Khách hàng tiềm năng mới (Cần chăm sóc)</h3>
+                    <a href="qlkh.html" class="btn-view-all" style="text-decoration: none;">Xem tất cả danh sách <i class='bx bx-right-arrow-alt'></i></a>
+                </div>
+                
+                <table class="crm-table">
+                    <thead>
+                        <tr>
+                            <th>TÊN KHÁCH HÀNG</th>
+                            <th>LIÊN HỆ</th>
+                            <th>XE Đang QUAN TÂM</th>
+                            <th>TRẠNG THÁI</th>
+                            <th>THAO TÁC</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td><strong>Trần Văn An</strong><br><small style="color: var(--text-muted);">Nguồn: Website</small></td>
+                            <td>0904.***.888</td>
+                            <td><strong>Porsche 911 Carrera</strong></td>
+                            <td><span class="lead-badge hot">Nóng (Cần gọi ngay)</span></td>
+                            <td><button class="btn-call"><i class='bx bx-phone-call'></i> Gọi điện</button></td>
+                        </tr>
+                        <tr>
+                            <td><strong>Nguyễn Thị Bình</strong><br><small style="color: var(--text-muted);">Nguồn: Fanpage Facebook</small></td>
+                            <td>0988.***.123</td>
+                            <td><strong>Tesla Model 3 Perf</strong></td>
+                            <td><span class="lead-badge warm">Đã tư vấn giá</span></td>
+                            <td><button class="btn-call"><i class='bx bx-phone-call'></i> Gọi điện</button></td>
+                        </tr>
+                        <tr>
+                            <td><strong>Lê Hoàng Quân</strong><br><small style="color: var(--text-muted);">Nguồn: Giới thiệu</small></td>
+                            <td>0912.***.999</td>
+                            <td><strong>Lamborghini Temerario</strong></td>
+                            <td><span class="lead-badge cold">Hẹn lái thử 15/10</span></td>
+                            <td><button class="btn-call"><i class='bx bx-phone-call'></i> Gọi điện</button></td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+
+    </main>
+
+    <div class="custom-alert-overlay" id="authAlertOverlay">
+        <div class="custom-alert-box">
+            <button class="close-btn" id="authCloseBtn">&times;</button>
+            <h3>Thông báo xác thực</h3>
+            <p>Bạn cần đăng nhập để sử dụng tính năng này!</p>
+            <button id="authAlertBtn">Đăng nhập ngay</button>
+        </div>
+    </div>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            const isLoggedIn = sessionStorage.getItem('isLoggedIn');
+
+            if (!isLoggedIn) {
+                const interactiveElements = document.querySelectorAll('aside a, .filter-pills button, .btn-call, .btn-view-all, #searchInput, .spotlight-wrapper button');
+
+                interactiveElements.forEach(element => {
+                    element.addEventListener('click', function(e) {
+                        e.preventDefault();
+                        e.stopPropagation();
+                        document.getElementById('authAlertOverlay').classList.add('active');
+                    });
+                });
+            }
+        });
+
+        document.getElementById('authAlertBtn').addEventListener('click', function() {
+            window.location.href = "login.html";
+        });
+
+        document.getElementById('authCloseBtn').addEventListener('click', function() {
+            document.getElementById('authAlertOverlay').classList.remove('active');
+        });
+    </script>
+
+    <script src="database.js"></script>
+    <script src="car.js"></script>
+</body>
+</html>

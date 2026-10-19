@@ -1,0 +1,188 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Quản Lý Đơn Mua Xe - Hello Kitty Auto</title>
+    <link href='https://unpkg.com/boxicons@2.1.4/css/boxicons.min.css' rel='stylesheet'>
+    <link rel="stylesheet" href="car.css"> 
+    
+    <style>
+        /* TÚT LẠI GIAO DIỆN CHUẨN PORSCHE */
+        .orders-management-container { background: #fff; padding: 30px; border-radius: 12px; box-shadow: 0 4px 15px rgba(0,0,0,0.03); border: 1px solid #E2E8F0; }
+        .orders-header h2 { font-size: 20px; font-weight: 600; margin-bottom: 20px; color: #111; display: flex; align-items: center; gap: 8px;}
+        
+        /* Thanh công cụ (Toolbar) */
+        .orders-filter-bar { display: flex; align-items: center; gap: 15px; margin-top: 20px; flex-wrap: wrap;}
+        .search-box { display: flex; align-items: center; border: 1px solid #E2E8F0; border-radius: 8px; padding: 0 15px; height: 42px; width: 300px; background: #FAFAFA; transition: 0.3s;}
+        .search-box:focus-within { border-color: #111; background: #fff; }
+        .search-box i { font-size: 18px; color: #888; margin-right: 8px;}
+        .search-box input { border: none; outline: none; width: 100%; font-size: 14px; background: transparent; color: #111;}
+        
+        .date-filter-group { display: flex; align-items: center; gap: 8px; font-size: 14px; color: #555;}
+        .order-date-filter, .order-select-filter { height: 42px; border: 1px solid #E2E8F0; border-radius: 8px; padding: 0 12px; background: #FAFAFA; font-size: 14px; color: #111; outline: none; cursor: pointer;}
+        
+        .btn-add-order { height: 42px; background: #D5001C; color: white; border: none; border-radius: 8px; padding: 0 20px; cursor: pointer; font-weight: 600; font-size: 14px; margin-left: auto; display: flex; align-items: center; gap: 8px; transition: 0.3s;}
+        .btn-add-order:hover { background: #A30015; transform: translateY(-1px); }
+
+        /* Bảng dữ liệu (Table) */
+        .orders-table { width: 100%; border-collapse: collapse; text-align: left; margin-top: 25px; font-size: 14px;}
+        .orders-table th { padding: 15px; background: #F9FAFB; color: #666; font-size: 12px; text-transform: uppercase; border-bottom: 2px solid #E2E8F0; font-weight: 600;}
+        .orders-table td { padding: 15px; border-bottom: 1px solid #E2E8F0; vertical-align: middle; color: #111;}
+        .orders-table tr:hover { background: #F9FAFB; }
+        
+        .car-thumbnail { width: 90px; height: 50px; object-fit: contain; border-radius: 4px; padding: 2px; background: #fff; border: 1px solid #E2E8F0;}
+
+        /* Phân trang (Pagination) */
+        .orders-footer-pagination { display: flex; justify-content: space-between; align-items: center; margin-top: 25px; padding-top: 20px;}
+        .pagination-controls { display: flex; gap: 8px; }
+        .page-btn { padding: 8px 14px; border: 1px solid #E2E8F0; background: #fff; border-radius: 6px; cursor: pointer; transition: 0.2s; font-size: 14px; font-weight: 500; color: #111;}
+        .page-btn.active { background: #111; color: white; border-color: #111;}
+        .page-btn:hover:not(.active) { background: #F4F4F4; }
+        .page-btn:disabled { opacity: 0.4; cursor: not-allowed; }
+
+        /* NÚT THAO TÁC CỦA SẾP YÊU CẦU */
+        .action-buttons { display: flex; justify-content: center; gap: 8px; }
+        .btn-action-icon { width: 34px; height: 34px; display: flex; align-items: center; justify-content: center; background: transparent; border: 1px solid #E2E8F0; border-radius: 6px; color: #64748B; cursor: pointer; transition: 0.2s; }
+        .btn-action-icon i { font-size: 18px; }
+        .btn-action-icon:hover { background: #F1F5F9; color: #111; border-color: #CBD5E1; }
+        .btn-action-icon.delete-btn:hover { background: #FEF2F2; color: #DC2626; border-color: #F87171; }
+
+        /* Tút lại các Modal */
+        .modal-overlay { position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.5); z-index: 2000; display: none; align-items: center; justify-content: center; backdrop-filter: blur(4px); opacity: 0; transition: opacity 0.3s; pointer-events: none;}
+        .modal-overlay.active { display: flex; opacity: 1; pointer-events: auto; }
+        .modal-content { background: #fff; padding: 30px; border-radius: 12px; width: 500px; max-width: 90%; box-shadow: 0 10px 30px rgba(0,0,0,0.1); transform: translateY(-20px); transition: transform 0.3s; }
+        .modal-overlay.active .modal-content { transform: translateY(0); }
+        .modal-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 20px; border-bottom: 1px solid #eee; padding-bottom: 15px;}
+        .modal-header h3 { font-size: 18px; font-weight: 600; color: #111; }
+        .modal-close { cursor: pointer; font-size: 26px; color: #888; transition: 0.2s;}
+        .modal-close:hover { color: #D5001C; }
+    </style>
+</head>
+<body>
+    <!-- HEADER -->
+    <header class="top-header">
+        <div class="menu-toggle" id="btn"><i class='bx bx-menu'></i><span>Menu</span></div>
+        <div class="center-logo">HELLO KITTY AUTO</div>
+        <div class="right-group"><div class="right-account"><a href="#"><i class='bx bx-user'></i></a></div></div>
+    </header>
+
+    <!-- SIDEBAR -->
+    <aside class="sidebar">
+        <ul class="nav-links">
+            <li><a href="car.html"><span class="link_name">Tổng quan</span><i class='bx bx-chevron-right'></i></a></li>
+            <li><a href="danhsachoto.html"><span class="link_name">Danh sách ô tô</span><i class='bx bx-chevron-right'></i></a></li>
+            <li class="active"><a href="donhang.html"><span class="link_name">Đơn mua xe</span><i class='bx bx-chevron-right'></i></a></li>
+            <li><a href="qlkh.html"><span class="link_name">Danh sách khách hàng</span><i class='bx bx-chevron-right'></i></a></li>
+        </ul>
+    </aside>
+
+    <!-- NỘI DUNG CHÍNH -->
+    <main class="main-content">
+        <div class="orders-management-container">
+            <div class="orders-header">
+                <h2><i class='bx bx-receipt'></i> QUẢN LÝ ĐƠN MUA XE</h2>
+                
+                <div class="orders-filter-bar">
+                    <div class="search-box"><i class='bx bx-search'></i><input type="text" id="orderSearch" placeholder="Tìm tên KH, SĐT, Mã đơn..."></div>
+                    <div class="date-filter-group">
+                        <input type="date" id="startDate" class="order-date-filter"><span>đến</span><input type="date" id="endDate" class="order-date-filter">
+                        <select id="datePresetFilter" class="order-select-filter">
+                            <option value="all">Tất cả thời gian</option>
+                            <option value="this-week">Tuần này</option>
+                            <option value="this-month">Tháng này</option>
+                        </select>
+                    </div>
+                    <select id="statusFilter" class="order-select-filter">
+                        <option value="all">Tất cả trạng thái</option>
+                        <option value="cho-xac-nhan">Chờ xác nhận</option>
+                        <option value="da-coc">Đã cọc</option>
+                        <option value="da-giao">Đã giao xe</option>
+                        <option value="da-huy">Đã hủy</option>
+                    </select>
+                    <button class="btn-add-order" id="openAddModalBtn"><i class='bx bx-plus'></i> THÊM ĐƠN HÀNG</button>
+                </div>
+            </div>
+
+            <div class="table-responsive">
+                <table class="orders-table">
+                    <thead>
+                        <tr><th>MÃ ĐƠN</th><th>ẢNH XE</th><th>KHÁCH HÀNG</th><th>SỐ ĐIỆN THOẠI</th><th>DÒNG XE MUA</th><th>NGÀY ĐẶT</th><th>TIỀN CỌC</th><th>TRẠNG THÁI</th><th style="text-align:center;">THAO TÁC</th></tr>
+                    </thead>
+                    <tbody id="ordersTableBody"></tbody>
+                </table>
+            </div>
+            
+            <div class="orders-footer-pagination">
+                <div style="font-weight: 600; font-size: 14px;">Tổng đơn hàng: <span id="totalOrdersCount" style="color: #D5001C;">0</span></div>
+                <div class="pagination-controls" id="paginationControls"></div>
+            </div>
+        </div>
+    </main>
+
+    <!-- MODAL THÊM / SỬA ĐƠN HÀNG -->
+    <div class="modal-overlay" id="addEditModal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h3 id="formModalTitle">Thêm Đơn Mua Xe Mới</h3>
+                <span class="modal-close" id="closeAddEditModal">&times;</span>
+            </div>
+            <form id="orderForm">
+                <input type="hidden" id="editOrderId">
+                <div style="margin-bottom: 12px;"><label style="font-size: 12px; font-weight: 600; color: #555;">Tên khách hàng:</label><input type="text" id="inputCustomer" required style="width:100%; padding:10px; border:1px solid #ddd; border-radius:6px; margin-top:5px; outline:none; background:#FAFAFA;"></div>
+                <div style="margin-bottom: 12px;"><label style="font-size: 12px; font-weight: 600; color: #555;">Số điện thoại:</label><input type="text" id="inputPhone" required style="width:100%; padding:10px; border:1px solid #ddd; border-radius:6px; margin-top:5px; outline:none; background:#FAFAFA;"></div>
+                <div style="margin-bottom: 12px;"><label style="font-size: 12px; font-weight: 600; color: #555;">Chọn xe từ kho:</label><select id="inputCar" required style="width:100%; padding:10px; border:1px solid #ddd; border-radius:6px; margin-top:5px; outline:none; cursor:pointer;"></select></div>
+                <div style="display: flex; gap: 15px; margin-bottom: 20px;">
+                    <!-- Ô 1: Nhập Tiền Cọc -->
+                    <div style="flex: 1;">
+                        <label style="font-size: 13px; font-weight: 600; color: #555;">Tiền cọc (VNĐ):</label>
+                        <input type="text" id="inputDeposit" required placeholder="500.000.000" style="width:100%; padding:12px; border:1px solid #ddd; border-radius:8px; margin-top:5px; outline:none; background:#FAFAFA;">
+                    </div>
+                    
+                    <!-- Ô 2: MỚI ĐƯỢC HỒI SINH - Ngày Đặt -->
+                    <div style="flex: 1;">
+                        <label style="font-size: 13px; font-weight: 600; color: #555;">Ngày đặt:</label>
+                        <input type="date" id="inputDate" required style="width:100%; padding:12px; border:1px solid #ddd; border-radius:8px; margin-top:5px; outline:none; background:#FAFAFA;">
+                    </div>
+                    
+                    <!-- Ô 3: Trạng thái đơn -->
+                    <div style="flex: 1;">
+                        <label style="font-size: 13px; font-weight: 600; color: #555;">Trạng thái:</label>
+                        <select id="inputStatus" style="width:100%; padding:12px; border:1px solid #ddd; border-radius:8px; margin-top:5px; outline:none; cursor:pointer;">
+                            <option value="cho-xac-nhan">Chờ xác</option>
+                            <option value="da-coc">Đã cọc</option>
+                            <option value="da-giao">Đã giao</option>
+                            <option value="da-huy">Đã hủy</option>
+                        </select>
+                    </div>
+                </div>
+                <button type="button" id="btnSaveOrder" style="width:100%; padding:12px; background:#D5001C; color:#fff; border:none; border-radius:6px; font-size:14px; font-weight:bold; cursor:pointer; text-transform:uppercase;">LƯU ĐƠN HÀNG</button>
+            </form>
+        </div>
+    </div>
+
+    <!-- MODAL XEM CHI TIẾT -->
+    <div class="modal-overlay" id="orderModal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h3>Chi Tiết Đơn Hàng <span id="modalOrderId" style="color:#D5001C"></span></h3>
+                <span class="modal-close" id="closeModal">&times;</span>
+            </div>
+            <div style="text-align: center; margin-bottom: 20px;">
+                <img id="modalCarImage" src="" style="width: 80%; height: 160px; object-fit: contain;">
+                <h3 id="modalCar" style="margin-top: 10px;"></h3>
+            </div>
+            <div style="background: #FAFAFA; padding: 15px; border-radius: 8px; border: 1px solid #eee; line-height: 2; font-size: 14px;">
+                <p><strong>Khách hàng:</strong> <span id="modalCustomer"></span> (<span id="modalPhone"></span>)</p>
+                <p><strong>Ngày đặt:</strong> <span id="modalDate"></span></p>
+                <p><strong>Tổng giá trị:</strong> <span id="modalTotal"></span></p>
+                <p><strong>Tiền cọc:</strong> <strong id="modalDeposit" style="color:#D5001C"></strong></p>
+                <p><strong>Trạng thái:</strong> <span id="modalStatus"></span></p>
+            </div>
+        </div>
+    </div>
+
+    <script src="database.js"></script>
+    <script src="donhang.js"></script>
+</body>
+</html>
